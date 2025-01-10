@@ -11,7 +11,6 @@
             margin: 0;
             position: relative;
             font-family: Arial, sans-serif;
-            color: white;
         }
 
         .error {
@@ -128,18 +127,6 @@
     </style>
 </head>
 <body>
-    <div class="disclaimer">
-        <div class="error" style="width: 500px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="title-bar">
-                Warning!
-            </div>
-            <div class="message">
-                This website gets really laggy.<br>
-                If it starts lagging or your computer makes weird sounds, please click off immediately.
-            </div>
-        </div>
-    </div>
-
     <audio id="background-music" autoplay loop>
         <source src="https://kappa.vgmsite.com/soundtracks/gossun-remix-ein-2008/acarxvlomn/06.%20%E9%AD%94%E7%90%86%E6%B2%99%E3%81%AF%E5%A4%A7%E5%A4%89%E3%81%AA%E3%82%82%E3%81%AE%E3%82%92%E7%9B%97%E3%82%93%E3%81%A7%E3%81%84%E3%81%8D%E3%81%BE%E3%81%97%E3%81%9F%20-%20%E3%82%B9%E3%83%BC%E3%83%91%E3%83%BC%E3%83%93%E3%83%83%E3%82%AF%E3%83%AA%E3%82%AD%E3%83%8E%E3%82%B3%E3%82%BF%E3%82%A4%E3%83%A0%20-.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -217,24 +204,26 @@
                 { start: 4.5833, duration: 0.4167, lyric: '誰にも言えないビックリキノコ' },
                 { start: 5.0, duration: 0.4167, lyric: '秘密のビックリキノコタイム' },
                 { start: 5.4167, duration: 0.4167, lyric: 'そのままじゃ　このビックリキノコタイム' },
-                { start: 5.8333, duration: 0.4167, lyric: 'キノコタイム！' },
-                { start: 6.25, duration: 0.4167, lyric: '楽しいあれはビックリキノコ' },
-                { start: 6.6667, duration: 0.4167, lyric: 'キノコタイム！' },
-                { start: 7.0833, duration: 0.4167, lyric: '楽しいあれはビックリキノコ' }
+                { start: 5.8333, duration: 0.4167, lyric: '秘密のビックリキノコタイム' }
             ];
 
             lyricsTiming.forEach(timing => {
-                if (currentTime >= timing.start && currentTime <= timing.start + timing.duration) {
+                const end = timing.start + timing.duration;
+                if (currentTime >= timing.start && currentTime <= end) {
                     createError(timing.lyric);
                 }
             });
+
+            // Trigger errors by beat
+            if (beats > 0) {
+                createError(`Beat: ${beats}`);
+            }
         }
 
         audio.addEventListener('timeupdate', syncErrors);
-
-        // Trigger initial background music glitch and display
-        audio.volume = 0.3;
-        audio.play();
+        audio.addEventListener('ended', function() {
+            location.reload();  // Reload the page when song loops
+        });
     </script>
 </body>
 </html>
